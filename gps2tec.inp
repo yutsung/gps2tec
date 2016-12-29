@@ -1,0 +1,13 @@
+# case_type  (local/IGS)
+    case_type = IGS
+
+
+# time
+    year     = 2015
+    st_doy   =   74
+    ed_doy   =   74
+
+    # for IGS
+    download_list_fn  = /Users/weihan/work/gps2tec/list
+    save_pwd          =
+
