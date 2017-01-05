@@ -197,7 +197,7 @@ def cal_stec(Pcode, Lcode, dt):
                     #        temp2[i]=Ldata[i,snv]+temp_tmp
         for i in range(length):
             stec[i, snv] = temp2[i]
-    stec[np.where(stec < 0)] = 0
+
     return stec
 
 
