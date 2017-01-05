@@ -76,19 +76,21 @@ def main():
         p1c1.get_p1c1data()
 
         print "Start to process GPS data..."
+        interval = len(stn_list) // input_para.mp_num
         for i in range(input_para.mp_num):
-            st_idx = i * 10
-            ed_idx = i * 10 + 10
-            multi_args = (stn_list[st_idx:ed_idx], input_para, target_time, target_doy, satdata, gim)
+            st_idx = i * interval
+            ed_idx = i * interval + interval
+            if i == input_para.mp_num-1 : ed_idx += len(stn_list) % input_para.mp_num
+            multi_args = (stn_list[st_idx:ed_idx], input_para, target_time, target_doy, satdata, gim, i)
             p = multiprocessing.Process(target=multi_gps2tec, args=multi_args)
             p.start()
 
 
-def multi_gps2tec(stn_list, input_para, target_time, target_doy, satdata, gim):
+def multi_gps2tec(stn_list, input_para, target_time, target_doy, satdata, gim, subprocess_num):
 
     for stn_num, station in enumerate(stn_list, start=1):
         target_stn = station[0:4]
-        print "DOY: {3:03}, Station: {0} ({1:4}/{2:4}) ".format(target_stn, stn_num, len(stn_list), target_doy),
+        print "Process:{4:>2}, DOY:{3:>3}, Station: {0} ({1:4}/{2:4}) ".format(target_stn, stn_num, len(stn_list), target_doy, subprocess_num),
         st_time = time.time()
         ofile = Getdata.GPSofileData(target_stn, target_time.year, target_doy)
         stnx, stny, stnz = ofile.read_ofile_xyz()

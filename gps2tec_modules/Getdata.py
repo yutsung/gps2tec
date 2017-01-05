@@ -412,7 +412,9 @@ class GPSourceFile:
 
     def download_data(self, download_type, download_file):
         from ftplib import FTP
-        import os, sys, datetime
+        import sys
+        import multiprocessing
+
         ####    different type to different ftp host, path, and filename list
         if download_type == 'igs':
             ftp_host = 'garner.ucsd.edu'
@@ -441,12 +443,33 @@ class GPSourceFile:
                 file_temp = f.readlines()
                 for stn in file_temp:
                     filenames.append('{0}{1}'.format(stn[:4], ftp_fn_filter[1:]))
+
+        ftp.quit()
         total_file = len(filenames)
-        file_count = 1 
+        interval = total_file // 2
+        process_list =[]
         print 'Start to download GPS file from "{0}"'.format(ftp_host)
+        for i in range(2):
+            st = i*interval
+            ed = i*interval+interval
+            if i == 1 : ed += total_file % 2
+            ftp = FTP(ftp_host)
+            ftp.login()
+            ftp.cwd(ftp_pwd)
+            p = multiprocessing.Process(target=self.multi_download, args=(ftp, filenames[st:ed], ftp_fn_filter))
+            p.start()
+            process_list.append(p)
+
+        for job in process_list: job.join()
+
+
+    def multi_download(self, ftp, filenames, ftp_fn_filter):
+        import os
+        total_file = len(filenames)
+        file_count = 1
         for filename in filenames:
-            print "Process... {0:6.2f}%  :  {1} -- ".format(float(file_count)*100/total_file, filename[:4]), 
-            if os.path.isfile(filename) or os.path.isfile("{0}{1}".format(filename[:4], ftp_fn_filter[1:-2])) or os.path.isfile("{0}{1}o".format(filename[:4], ftp_fn_filter[1:-3])): 
+            print "Process... {0:6.2f}%  :  {1} -- ".format(float(file_count)*100/total_file, filename[:4]),
+            if os.path.isfile(filename) or os.path.isfile("{0}{1}".format(filename[:4], ftp_fn_filter[1:-2])) or os.path.isfile("{0}{1}o".format(filename[:4], ftp_fn_filter[1:-3])):
                 print 'Already have the file !'
                 file_count+=1
                 continue
@@ -461,6 +484,7 @@ class GPSourceFile:
                 os.remove(filename)
             save.close()
         ftp.quit()
+
 
     def decompress_file(self):
         import os

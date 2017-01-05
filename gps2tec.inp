@@ -18,4 +18,4 @@
     h1_km               = 450
     h2_km               = 200
 
-    multiprocess_number = 1
+    multiprocess_number = 2
