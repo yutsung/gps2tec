@@ -11,3 +11,9 @@
     download_list_fn  = /Users/weihan/work/gps2tec/list
     save_pwd          =
 
+# stnbias_method (GIM/FITTING)
+    stnbias_method = GIM
+
+    elevation_angle = 0
+    h1_km           = 450
+    h2_km           = 200

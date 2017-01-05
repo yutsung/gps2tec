@@ -22,7 +22,7 @@ class GimData:
         if self.file_exist():
             print "No need to download GIM data..."
             return
-        print "Start download GIM data..." 
+        print "Start to download GIM data..."
         weblink = "ftp://ftp.unibe.ch/aiub/CODE/{0}/".format(self.year)
         if not os.path.isfile(self.sourcefn[:-2]): 
             if not os.path.isfile(self.sourcefn):
@@ -523,19 +523,30 @@ class GPSofileData:
             ofile_data = fid.readlines()
 
         data_line = 0
+        obs_dt = 0
+        obs_num = 0
+        obs_list = []
         while not ofile_data[data_line][60:73] == "END OF HEADER":
             if ofile_data[data_line][60:68] == "INTERVAL":   # read GPS data time interval
                 obs_dt = float(ofile_data[data_line][0:6])
             if ofile_data[data_line][60:79] == "# / TYPES OF OBSERV": # read numbers of GPS observation and kind
-                obs_num = int(ofile_data[data_line][4:6])
+                if not obs_num: obs_num = int(ofile_data[data_line][4:6])
                 if obs_num < 4:
                     return
                 else:
-                    obs_list = ofile_data[data_line][10:60].split()
+                    obs_list.extend(ofile_data[data_line][10:60].split())
             data_line += 1
 
         each_obs_lines = ((obs_num-1)//5)+1
         data_line += 1
+
+        if not obs_dt:
+            # calculate time interval
+            sate_num = int(ofile_data[data_line][30:32])
+            first_sec = int(ofile_data[data_line][9:12]) * 3600 + int(ofile_data[data_line][12:15]) * 60 + int(ofile_data[data_line][15:18])
+            second_idx = data_line + each_obs_lines * sate_num + (sate_num - 1) // 12 + 1
+            second_sec = int(ofile_data[second_idx][9:12]) * 3600 + int(ofile_data[second_idx][12:15]) * 60 + int(ofile_data[second_idx][15:18])
+            obs_dt = second_sec - first_sec
 
         if not ('L1' in obs_list and 'L2' in obs_list and 'P2' in obs_list and ('P1' in obs_list or 'C1' in obs_list)):  # if L1 L2 P2 and (C1 or P1) exist, start to read ofile
             return
@@ -545,7 +556,12 @@ class GPSofileData:
             while data_line < len(ofile_data):
                 sate_list = []
                 sate_dataline_list = []
-
+                if int(ofile_data[data_line][28:29]) != 0:
+                    if ofile_data[data_line][33:35] == '':
+                        data_line += int(ofile_data[data_line][29:32]) + 1
+                    else:
+                        data_line += each_obs_lines * int(ofile_data[data_line][30:32]) + (int(ofile_data[data_line][30:32])-1)//12 + 1
+                    continue
                 current_second = int(ofile_data[data_line][9:12]) * 3600 + int(ofile_data[data_line][12:15]) * 60 + int(ofile_data[data_line][15:18])
                 sate_num = int(ofile_data[data_line][30:32])
                 if current_second % dt == 0:
@@ -571,6 +587,7 @@ class GPSofileData:
                         # L1
                         target_idx = obs_list.index('L1') + 1
                         target_data_line = code_data_line_st + sate_dataline_list[i] * each_obs_lines + (target_idx - 1) // 5
+                        if target_idx > 5: target_idx -= 5
                         try:
                             L1[time_idx, sate_list[i] - 1] = float(ofile_data[target_data_line][1 + 16 * (target_idx - 1):14 + 16 * (target_idx - 1)])
                         except ValueError:
@@ -579,6 +596,7 @@ class GPSofileData:
                         # L2
                         target_idx = obs_list.index('L2') + 1
                         target_data_line = code_data_line_st + sate_dataline_list[i] * each_obs_lines + (target_idx - 1) // 5
+                        if target_idx > 5 : target_idx -= 5
                         try:
                             L2[time_idx, sate_list[i] - 1] = float(ofile_data[target_data_line][1 + 16 * (target_idx - 1):14 + 16 * (target_idx - 1)])
                         except ValueError:
@@ -587,6 +605,7 @@ class GPSofileData:
                         # P2
                         target_idx = obs_list.index('P2') + 1
                         target_data_line = code_data_line_st + sate_dataline_list[i] * each_obs_lines + (target_idx - 1) // 5
+                        if target_idx > 5: target_idx -= 5
                         try:
                             P2[time_idx, sate_list[i] - 1] = float(ofile_data[target_data_line][1 + 16 * (target_idx - 1):14 + 16 * (target_idx - 1)])
                         except ValueError:
@@ -596,21 +615,27 @@ class GPSofileData:
                         try:
                             target_idx = obs_list.index('P1') + 1
                             target_data_line = code_data_line_st + sate_dataline_list[i] * each_obs_lines + (target_idx - 1) // 5
+                            if target_idx > 5: target_idx -= 5
                             P1[time_idx, sate_list[i] - 1] = float(ofile_data[target_data_line][1 + 16 * (target_idx - 1):14 + 16 * (target_idx - 1)])
                         except ValueError:
                             P1_err_nums += 1
                             target_idx = obs_list.index('C1') + 1
                             target_data_line = code_data_line_st + sate_dataline_list[i] * each_obs_lines + (target_idx - 1) // 5
-                            P1[time_idx, sate_list[i] - 1] = float(ofile_data[target_data_line][1 + 16 * (target_idx - 1):14 + 16 * (target_idx - 1)])
+                            if target_idx > 5: target_idx -= 5
+                            try:
+                                P1[time_idx, sate_list[i] - 1] = float(ofile_data[target_data_line][1 + 16 * (target_idx - 1):14 + 16 * (target_idx - 1)])
+                            except ValueError:
+                                P1[time_idx, sate_list[i] - 1] = 0
+
                     data_line += each_obs_lines * sate_num
                 else:
                     data_line += each_obs_lines * sate_num + (sate_num-1)//12 + 1
-
+                #print data_line
         if P1_err_nums > total_step:
             P1_exist = False
         #if obs_dt==-999:
         #    obs_dt = check_dt
-        if obs_dt < 30: obs_dt = dt
+        if obs_dt < dt: obs_dt = dt
 
         return P1, P2, L1, L2, P1_exist, obs_dt
 
@@ -632,11 +657,11 @@ class StationBiasData:
 
         return 0.0
 
-    def write_stnbias(self, stn, stn_bias, write_stnbs, minTEC, GIMminTEC):
+    def write_stnbias(self, stn, stn_bias, write_stnbs, minTEC, GIMminTEC, method):
         
-        if (not write_stnbs) and (abs(minTEC-GIMminTEC)<1 or GIMminTEC==-999):
+        if (not write_stnbs) and (abs(minTEC-GIMminTEC)<1 or method =='fitting'):
             with open(self.biasfn,'a') as f:
-                f.write('{0}   {1:.4f}\n'.format(stn, stn_bias))
+                f.write('{0}{1:>11.4f}{2:>10}\n'.format(stn, stn_bias, method.upper()))
 
          
 
