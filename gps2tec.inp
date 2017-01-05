@@ -12,8 +12,10 @@
     save_pwd          =
 
 # stnbias_method (GIM/FITTING)
-    stnbias_method = GIM
+    stnbias_method      = GIM
 
-    elevation_angle = 0
-    h1_km           = 450
-    h2_km           = 200
+    elevation_angle     = 0
+    h1_km               = 450
+    h2_km               = 200
+
+    multiprocess_number = 1

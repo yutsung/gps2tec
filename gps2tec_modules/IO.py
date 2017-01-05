@@ -26,10 +26,11 @@ class Input_file:
                     else:
                         self.save_pwd = rdline.split('=')[1].strip()
 
-                if rdline.split('=')[0].strip() == 'stnbias_method':   self.stnbias_method  = rdline.split('=')[1].strip().lower()
-                if rdline.split('=')[0].strip() == 'elevation_angle':  self.elevation_angle = int(rdline.split('=')[1].strip())
-                if rdline.split('=')[0].strip() == 'h1_km':      self.h1 = float(rdline.split('=')[1].strip())
-                if rdline.split('=')[0].strip() == 'h2_km':      self.h2 = float(rdline.split('=')[1].strip())
+                if rdline.split('=')[0].strip() == 'stnbias_method':       self.stnbias_method  = rdline.split('=')[1].strip().lower()
+                if rdline.split('=')[0].strip() == 'elevation_angle':      self.elevation_angle = int(rdline.split('=')[1].strip())
+                if rdline.split('=')[0].strip() == 'h1_km':                self.h1 = float(rdline.split('=')[1].strip())
+                if rdline.split('=')[0].strip() == 'h2_km':                self.h2 = float(rdline.split('=')[1].strip())
+                if rdline.split('=')[0].strip() == 'multiprocess_number':  self.mp_num = int(rdline.split('=')[1].strip())
                 rdline = fid.readline()
 
         self.total_run = self.ed_doy - self.st_doy + 1
