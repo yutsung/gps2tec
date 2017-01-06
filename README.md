@@ -2,11 +2,14 @@
 
 This prohram is for claculate
 
-*Directory and file discription:*
+
+
+#__*Directory and file discription:*__
 
 __bin/__  : some binary files (different version of crx2rnx)
 
 __gps2tec_modules/__  : subroutines
+
 
 
 __gps2tec.inp__ :  input file 
