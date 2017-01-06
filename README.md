@@ -1,10 +1,10 @@
-# GPS2TEC
+#__GPS2TEC__
 
-This prohram is for claculate
+This prohram is for calculate total electron content(TEC) from gps signal
 
 
 
-#__*Directory and file discription:*__
+#Directory and file discription:
 
 __bin/__  : some binary files (different version of crx2rnx)
 
