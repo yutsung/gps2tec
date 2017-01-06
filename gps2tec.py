@@ -91,7 +91,7 @@ def multi_gps2tec(stn_list, input_para, target_time, target_doy, satdata, gim, s
 
     for stn_num, station in enumerate(stn_list, start=1):
         target_stn = station[0:4]
-        print "Process:{4:>2}, DOY:{3:>3}, Station: {0} ({1:4}/{2:4}) ".format(target_stn, stn_num, len(stn_list), target_doy, subprocess_num),
+        print "Process:{4:>2} ({1:4}/{2:4}), DOY:{3:>3}, Station: {0}".format(target_stn, stn_num, len(stn_list), target_doy, subprocess_num),
         st_time = time.time()
         ofile = Getdata.GPSofileData(target_stn, target_time.year, target_doy)
         stnx, stny, stnz = ofile.read_ofile_xyz()
