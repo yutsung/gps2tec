@@ -33,7 +33,7 @@ class Input_file:
 
                 # check OS to set different crx2rnx version
                 if platform.system().lower() in "linux2":
-                    self.crx2rnx_pwd = "bin/crx2rnx_Linux'"
+                    self.crx2rnx_pwd = "bin/crx2rnx_Linux"
                 elif platform.system().lower() in "darwin":
                     self.crx2rnx_pwd = "bin/crx2rnx_MacOS"
                 elif platform.system().lower() in "windows":
