@@ -2,16 +2,17 @@
 
 This prohram is for claculate
 
-Directory and file discription:
+*Directory and file discription:*
 
-bin/  : some binary files (different version of crx2rnx)
+__bin/__  : some binary files (different version of crx2rnx)
 
-gps2tec_modules/  : subroutines
+__gps2tec_modules/__  : subroutines
 
-gps2tec.inp :  input file 
 
-gps2tec.py  : main program 
+__gps2tec.inp__ :  input file 
 
-marker.crd  : gps station xyz coordinate list 
+__gps2tec.py__  : main program 
+
+__marker.crd__  : gps station xyz coordinate list 
 
 
