@@ -1,7 +1,6 @@
 class Input_file:
     def __init__(self, filename):
-        import datetime
-        import sys
+        import platform
         self.fn = filename
         with open(self.fn, 'r') as fid:
             rdline = fid.readline()
@@ -31,6 +30,15 @@ class Input_file:
                 if rdline.split('=')[0].strip() == 'h1_km':                self.h1 = float(rdline.split('=')[1].strip())
                 if rdline.split('=')[0].strip() == 'h2_km':                self.h2 = float(rdline.split('=')[1].strip())
                 if rdline.split('=')[0].strip() == 'multiprocess_number':  self.mp_num = int(rdline.split('=')[1].strip())
+
+                # check OS to set different crx2rnx version
+                if platform.system().lower() in "linux2":
+                    self.crx2rnx_pwd = "bin/crx2rnx_Linux'"
+                elif platform.system().lower() in "darwin":
+                    self.crx2rnx_pwd = "bin/crx2rnx_MacOS"
+                elif platform.system().lower() in "windows":
+                    self.crx2rnx_pwd = "bin/crx2rnx.exe"
+
                 rdline = fid.readline()
 
         self.total_run = self.ed_doy - self.st_doy + 1

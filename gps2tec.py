@@ -14,6 +14,7 @@ import time
 import glob
 import warnings
 import multiprocessing
+import shutil
 
 import numpy as np
 
@@ -38,9 +39,9 @@ def main():
         # search gps ofile
         gpsfile = Getdata.GPSourceFile(target_time.year, target_doy)
         if input_para.case_type == 'local':
-            pass
+            shutil.copy(input_para.crx2rnx_pwd, 'crx2rnx')
         elif input_para.case_type in 'igsrt':
-            DataProcess.preprocess(target_time.year, target_doy, input_para.save_pwd, input_para.download_list_fn) # create directory and copy needed file () to save_pwd
+            DataProcess.preprocess(target_time.year, target_doy, input_para.save_pwd, input_para.download_list_fn, input_para.crx2rnx_pwd) # create directory and copy needed file () to save_pwd
             gpsfile.download_data(input_para.case_type, input_para.download_list_fn)
         else:
             print "case_type error"

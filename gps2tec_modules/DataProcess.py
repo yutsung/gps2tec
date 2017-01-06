@@ -1,12 +1,14 @@
-def preprocess(year, doy, save_pwd, download_list_fn):
-    import os, shutil
+def preprocess(year, doy, save_pwd, download_list_fn, crx2rnx_pwd):
+    import os
+    import shutil
     if save_pwd != '':
         if save_pwd[-1]!= '/': save_pwd += '/'
     if not os.path.isdir('{0}{1}/{2:03}/'.format(save_pwd, year, doy)):
         os.makedirs('{0}{1}/{2:03}/'.format(save_pwd, year, doy))
-    shutil.copy('crx2rnx','{0}{1}/{2:03}/'.format(save_pwd, year, doy))
-    shutil.copy('marker.crd','{0}{1}/{2:03}/'.format(save_pwd, year, doy))
-    if download_list_fn !='':
+
+    shutil.copy(crx2rnx_pwd, '{0}{1}/{2:03}/crx2rnx'.format(save_pwd, year, doy))
+    shutil.copy('marker.crd', '{0}{1}/{2:03}/'.format(save_pwd, year, doy))
+    if download_list_fn != '':
         shutil.copy(download_list_fn,'{0}{1}/{2:03}/'.format(save_pwd, year, doy))
     os.chdir('{0}{1}/{2:03}/'.format(save_pwd, year, doy))
 

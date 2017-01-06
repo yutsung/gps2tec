@@ -462,13 +462,12 @@ class GPSourceFile:
 
         for job in process_list: job.join()
 
-
     def multi_download(self, ftp, filenames, ftp_fn_filter):
         import os
         total_file = len(filenames)
         file_count = 1
         for filename in filenames:
-            print "Process... {0:6.2f}%  :  {1} -- ".format(float(file_count)*100/total_file, filename[:4]),
+            print "Processing:  {1} -- ".format(float(file_count)*100/total_file, filename[:4]),
             if os.path.isfile(filename) or os.path.isfile("{0}{1}".format(filename[:4], ftp_fn_filter[1:-2])) or os.path.isfile("{0}{1}o".format(filename[:4], ftp_fn_filter[1:-3])):
                 print 'Already have the file !'
                 file_count+=1
