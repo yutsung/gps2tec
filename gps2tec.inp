@@ -2,20 +2,31 @@
     case_type = IGS
 
 
-# time
-    year     = 2015
-    st_doy   =   74
-    ed_doy   =   74
+# different setting for different case_type
 
-    # for IGS
-    download_list_fn  = /Users/weihan/work/gps2tec/list
-    save_pwd          =
+    year      = 2017
+    save_pwd  =
+
+    # for IGS and local
+        st_doy   =   74
+        ed_doy   =   74
+        download_list_fn  = /Users/weihan/work/gps2tec/list
+
+    # for IGSRT (real time IGS)
+        doy      =   10
+        hh       =    8
+        mm       =   50
+        gim_days_before     = 10
+        time_delay_minute   =  5
+
+
+
 
 # stnbias_method (GIM/FITTING)
     stnbias_method      = GIM
 
-    elevation_angle     = 0
-    h1_km               = 450
-    h2_km               = 200
+    elevation_angle      = 0
+    h1_km                = 450
+    h2_km                = 200
 
-    multiprocess_number = 2
+    multiprocess_numbers = 2

@@ -25,11 +25,17 @@ class Input_file:
                     else:
                         self.save_pwd = rdline.split('=')[1].strip()
 
+                if rdline.split('=')[0].strip() == 'doy':    self.doy = int(rdline.split('=')[1].strip())
+                if rdline.split('=')[0].strip() == 'hh':    self.hh = int(rdline.split('=')[1].strip())
+                if rdline.split('=')[0].strip() == 'mm':    self.mm = int(rdline.split('=')[1].strip())
+                if rdline.split('=')[0].strip() == 'gim_days_before':    self.doy = int(rdline.split('=')[1].strip())
+                if rdline.split('=')[0].strip() == 'time_delay_minute':    self.doy = int(rdline.split('=')[1].strip())
+
                 if rdline.split('=')[0].strip() == 'stnbias_method':       self.stnbias_method  = rdline.split('=')[1].strip().lower()
                 if rdline.split('=')[0].strip() == 'elevation_angle':      self.elevation_angle = int(rdline.split('=')[1].strip())
                 if rdline.split('=')[0].strip() == 'h1_km':                self.h1 = float(rdline.split('=')[1].strip())
                 if rdline.split('=')[0].strip() == 'h2_km':                self.h2 = float(rdline.split('=')[1].strip())
-                if rdline.split('=')[0].strip() == 'multiprocess_number':  self.mp_num = int(rdline.split('=')[1].strip())
+                if rdline.split('=')[0].strip() == 'multiprocess_numbers': self.mp_num = int(rdline.split('=')[1].strip())
 
                 # check OS to set different crx2rnx version
                 if platform.system().lower() in "linux2":
