@@ -153,7 +153,7 @@ class GimData:
                 if rdline[3:4]=="G" and rdline[60:80] == "STATION / BIAS / RMS":
                     stn  = rdline[6:10].lower()
                     bias = float(rdline[28:36])*0.299792458
-                    bias_fid.write('{0}   {1:.4f}\n'.format(stn, bias))
+                    bias_fid.write('{0}{1:>11.4f}{2:>10}\n'.format(stn, bias, 'CODG'))
                 rdline = fid.readline()
             bias_fid.close()
         
