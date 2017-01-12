@@ -1,16 +1,23 @@
-def preprocess(year, doy, save_pwd, download_list_fn, crx2rnx_pwd):
+def preprocess(year, doy, para):
     import os
     import shutil
-    if save_pwd != '':
-        if save_pwd[-1]!= '/': save_pwd += '/'
-    if not os.path.isdir('{0}{1}/{2:03}/'.format(save_pwd, year, doy)):
-        os.makedirs('{0}{1}/{2:03}/'.format(save_pwd, year, doy))
 
-    shutil.copy(crx2rnx_pwd, '{0}{1}/{2:03}/crx2rnx'.format(save_pwd, year, doy))
-    shutil.copy('marker.crd', '{0}{1}/{2:03}/'.format(save_pwd, year, doy))
-    if download_list_fn != '':
-        shutil.copy(download_list_fn,'{0}{1}/{2:03}/'.format(save_pwd, year, doy))
-    os.chdir('{0}{1}/{2:03}/'.format(save_pwd, year, doy))
+    save_pwd = para.save_pwd
+    download_list_fn = para.download_list_fn
+    crx2rnx_pwd = para.crx2rnx_pwd
+    case = para.case_type
+    if case == 'local':
+        shutil.copy(crx2rnx_pwd, 'crx2rnx')
+    else:
+        if save_pwd != '':
+            if save_pwd[-1]!= '/': save_pwd += '/'
+        if not os.path.isdir('{0}{1}/{2:03}/'.format(save_pwd, year, doy)):
+            os.makedirs('{0}{1}/{2:03}/'.format(save_pwd, year, doy))
+        shutil.copy(crx2rnx_pwd, '{0}{1}/{2:03}/crx2rnx'.format(save_pwd, year, doy))
+        shutil.copy('marker.crd', '{0}{1}/{2:03}/'.format(save_pwd, year, doy))
+        if download_list_fn != '':
+            shutil.copy(download_list_fn,'{0}{1}/{2:03}/'.format(save_pwd, year, doy))
+        os.chdir('{0}{1}/{2:03}/'.format(save_pwd, year, doy))
 
 
 def xyz2g(x, y, z):

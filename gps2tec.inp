@@ -1,10 +1,10 @@
-# case_type  (local/IGS)
+# case_type  (local/IGS/IGSRT)
     case_type = IGS
 
 
 # different setting for different case_type
 
-    year      = 2017
+    year      = 2015
     save_pwd  =
 
     # for IGS and local
@@ -12,7 +12,7 @@
         ed_doy   =   74
         download_list_fn  = /Users/weihan/work/gps2tec/list
 
-    # for IGSRT (real time IGS)
+    # for IGSRT (realtime IGS)
         doy      =   10
         hh       =    8
         mm       =   50

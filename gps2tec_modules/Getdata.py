@@ -423,7 +423,6 @@ class GPSourceFile:
         elif download_type == 'igsrt':
             ftp_host = 'cddis.gsfc.nasa.gov'
             ftp_pwd  = '/pub/gps/data/highrate/{0}/{2:03}/{1:02}d/{3:02}/'.format(self.year, self.year%100, self.doy, self.hh)
-            #ftp_pwd  = '/pub/gps/data/highrate/'
             ftp_fn_filter = '*{0:03}{1}{2:02}.{3:02}d.Z'.format(self.doy, chr(97+self.hh), self.mm, self.year%100)
             download_file = 'bias{0}{1:03}.dat'.format(self.year, self.doy)
         ####    connect to ftp

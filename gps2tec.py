@@ -32,17 +32,27 @@ def main():
 
     for run in range(input_para.total_run):
         # deal with time
-        target_st_time = datetime.datetime(input_para.year, 1, 1) + datetime.timedelta(days=input_para.st_doy - 1)
-        target_time = target_st_time + datetime.timedelta(days=run)
+        target_time = input_para.st_time + datetime.timedelta(minutes=input_para.run_step * run) - datetime.timedelta(minutes=input_para.time_delay)
         target_doy = (target_time - datetime.datetime(target_time.year, 1, 1)).days + 1
+        gim_time = input_para.gim_time
+        gim_doy = (datetime.datetime(gim_time.year, gim_time.month, gim_time.day) - datetime.datetime(gim_time.year, 1, 1)).days + 1
+
+        os.chdir(main_pwd)
+        DataProcess.preprocess(target_time.year, target_doy, input_para)  # create directory and copy needed file () to save_pwd
+
+        # get GIM data
+        gim = Getdata.GimData(gim_time.year, gim_doy)
+        gim.get_gimdata()
+        gim.create_mapfile()
+        gim.read_station_bias()
+        if input_para.case_type == 'igsrt': shutil.copy('bias{0}{1:03}.dat'.format(gim_time.year, gim_doy), 'bias{0}{1:03}.dat'.format(target_time.year, target_doy))
 
         # search gps ofile
-        gpsfile = Getdata.GPSourceFile(target_time.year, target_doy)
-        if input_para.case_type == 'local':
-            shutil.copy(input_para.crx2rnx_pwd, 'crx2rnx')
-        elif input_para.case_type in 'igsrt':
-            DataProcess.preprocess(target_time.year, target_doy, input_para.save_pwd, input_para.download_list_fn, input_para.crx2rnx_pwd) # create directory and copy needed file () to save_pwd
+        gpsfile = Getdata.GPSourceFile(target_time.year, target_doy, target_time.hour, target_time.minute)
+        if input_para.case_type in 'igsrt':
             gpsfile.download_data(input_para.case_type, input_para.download_list_fn)
+        elif input_para.case_type == 'local':
+            pass
         else:
             print "case_type error"
 
@@ -51,21 +61,15 @@ def main():
 
         # check gps ofile
         if input_para.case_type == 'igsrt':
-            pass#stn_list = sorted(glob.glob('*{0:03}{1}{2:02}.{3:02}o'.format(target_doy, chr(97 + target_hh), target_mm, target_year % 100)))
+            stn_list = sorted(glob.glob('*{0:03}{1}{2:02}.{3:02}o'.format(target_doy, chr(97 + target_time.hour), target_time.minute, target_time.year % 100)))
         else:
             stn_list = sorted(glob.glob("*{0:03}0.{1:02}o".format(target_doy, target_time.year % 100)))
         if stn_list == []:
             print "No GPS observation data on {0}.{1:03}".format(target_time.year, target_doy)
             break
 
-        # get GIM data
-        gim = Getdata.GimData(target_time.year, target_doy)
-        gim.get_gimdata()
-        gim.create_mapfile()
-        gim.read_station_bias()
-
         # get Navigation data
-        navidata = Getdata.NavigationData(target_time.year, target_doy)
+        navidata = Getdata.NavigationData(target_time.year, target_doy, target_time.hour, target_time.minute, input_para.case_type)
         navidata.get_navidata()
         satdata = navidata.read_navidata()
 
@@ -79,6 +83,7 @@ def main():
 
         print "Start to process GPS data..."
         interval = len(stn_list) // input_para.mp_num
+        process_list = []
         for i in range(input_para.mp_num):
             st_idx = i * interval
             ed_idx = i * interval + interval
@@ -86,6 +91,8 @@ def main():
             multi_args = (stn_list[st_idx:ed_idx], input_para, target_time, target_doy, satdata, gim, i)
             p = multiprocessing.Process(target=multi_gps2tec, args=multi_args)
             p.start()
+            process_list.append(p)
+        for job in process_list: job.join()
 
 
 def multi_gps2tec(stn_list, input_para, target_time, target_doy, satdata, gim, subprocess_num):
@@ -94,7 +101,7 @@ def multi_gps2tec(stn_list, input_para, target_time, target_doy, satdata, gim, s
         target_stn = station[0:4]
         print "Process:{4:>2} ({1:4}/{2:4}), DOY:{3:>3}, Station: {0}, ".format(target_stn, stn_num, len(stn_list), target_doy, subprocess_num),
         st_time = time.time()
-        ofile = Getdata.GPSofileData(target_stn, target_time.year, target_doy)
+        ofile = Getdata.GPSofileData(target_stn, target_time.year, target_doy, target_time.hour, target_time.minute, input_para.case_type)
         stnx, stny, stnz = ofile.read_ofile_xyz()
         if stnx == 0.0 or stny == 0.0 or stnz == 0.0:
             if os.path.isfile('marker.crd'):
@@ -172,7 +179,7 @@ def multi_gps2tec(stn_list, input_para, target_time, target_doy, satdata, gim, s
 
         # st = time.time()
         # start to output
-        op_file = IO.OutputData(input_para.case_type, target_stn, target_time.year, target_doy)
+        op_file = IO.OutputData(input_para.case_type, target_stn, target_time.year, target_doy, target_time.hour, target_time.minute)
         op_file.output_obs(lon, lat, vtec, stec, e)
         op_file.output_log(stn_lon, stn_lat, vtec.shape[0], minTEC, stn_bias)
         stnbs_file.write_stnbias(target_stn, stn_bias, write_stnbs, minTEC, GIMminTEC, input_para.stnbias_method)

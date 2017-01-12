@@ -1,6 +1,7 @@
 class Input_file:
     def __init__(self, filename):
         import platform
+        import datetime
         self.fn = filename
         with open(self.fn, 'r') as fid:
             rdline = fid.readline()
@@ -10,9 +11,9 @@ class Input_file:
                     continue
                 if rdline.split('=')[0].strip() == 'case_type': self.case_type = rdline.split('=')[1].strip().lower()
 
-                if rdline.split('=')[0].strip() == 'year':      self.year      = int(rdline.split('=')[1].strip())
-                if rdline.split('=')[0].strip() == 'st_doy':    self.st_doy    = int(rdline.split('=')[1].strip())
-                if rdline.split('=')[0].strip() == 'ed_doy':    self.ed_doy    = int(rdline.split('=')[1].strip())
+                if rdline.split('=')[0].strip() == 'year':      year      = int(rdline.split('=')[1].strip())
+                if rdline.split('=')[0].strip() == 'st_doy':    st_doy    = int(rdline.split('=')[1].strip())
+                if rdline.split('=')[0].strip() == 'ed_doy':    ed_doy    = int(rdline.split('=')[1].strip())
 
                 if rdline.split('=')[0].strip() == 'download_list_fn':
                     if len(rdline.split('=')) == 1:
@@ -25,11 +26,11 @@ class Input_file:
                     else:
                         self.save_pwd = rdline.split('=')[1].strip()
 
-                if rdline.split('=')[0].strip() == 'doy':    self.doy = int(rdline.split('=')[1].strip())
-                if rdline.split('=')[0].strip() == 'hh':    self.hh = int(rdline.split('=')[1].strip())
-                if rdline.split('=')[0].strip() == 'mm':    self.mm = int(rdline.split('=')[1].strip())
-                if rdline.split('=')[0].strip() == 'gim_days_before':    self.doy = int(rdline.split('=')[1].strip())
-                if rdline.split('=')[0].strip() == 'time_delay_minute':    self.doy = int(rdline.split('=')[1].strip())
+                if rdline.split('=')[0].strip() == 'doy':   doy = int(rdline.split('=')[1].strip())
+                if rdline.split('=')[0].strip() == 'hh':    hh = int(rdline.split('=')[1].strip())
+                if rdline.split('=')[0].strip() == 'mm':    mm = int(rdline.split('=')[1].strip())
+                if rdline.split('=')[0].strip() == 'gim_days_before':      gim_days_before   = int(rdline.split('=')[1].strip())
+                if rdline.split('=')[0].strip() == 'time_delay_minute':    self.time_delay = int(rdline.split('=')[1].strip())
 
                 if rdline.split('=')[0].strip() == 'stnbias_method':       self.stnbias_method  = rdline.split('=')[1].strip().lower()
                 if rdline.split('=')[0].strip() == 'elevation_angle':      self.elevation_angle = int(rdline.split('=')[1].strip())
@@ -37,17 +38,33 @@ class Input_file:
                 if rdline.split('=')[0].strip() == 'h2_km':                self.h2 = float(rdline.split('=')[1].strip())
                 if rdline.split('=')[0].strip() == 'multiprocess_numbers': self.mp_num = int(rdline.split('=')[1].strip())
 
-                # check OS to set different crx2rnx version
-                if platform.system().lower() in "linux2":
-                    self.crx2rnx_pwd = "bin/crx2rnx_Linux"
-                elif platform.system().lower() in "darwin":
-                    self.crx2rnx_pwd = "bin/crx2rnx_MacOS"
-                elif platform.system().lower() in "windows":
-                    self.crx2rnx_pwd = "bin/crx2rnx.exe"
+
 
                 rdline = fid.readline()
 
-        self.total_run = self.ed_doy - self.st_doy + 1
+        # check OS to set different crx2rnx version
+        if platform.system().lower() in "linux2":
+            self.crx2rnx_pwd = "bin/crx2rnx_Linux"
+        elif platform.system().lower() in "darwin":
+            self.crx2rnx_pwd = "bin/crx2rnx_MacOS"
+        elif platform.system().lower() in "windows":
+            self.crx2rnx_pwd = "bin/crx2rnx.exe"
+
+        if self.case_type == 'igs':
+            hh = 0
+            mm = 0
+            gim_days_before = 0
+            self.total_run = ed_doy - st_doy + 1
+            self.run_step = 60*24 # minute
+            self.time_delay = 0
+        elif self.case_type == 'igsrt':
+            st_doy = doy
+            self.total_run = 4
+            self.run_step = -15 # minute
+            self.stnbias_method = 'gim'
+
+        self.st_time = datetime.datetime(year, 1, 1, hh, mm) + datetime.timedelta(days=st_doy - 1)
+        self.gim_time = self.st_time - datetime.timedelta(days=gim_days_before)
 
 
 class OutputData:
