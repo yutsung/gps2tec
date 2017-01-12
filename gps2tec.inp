@@ -1,5 +1,5 @@
 # case_type  (local/IGS/IGSRT)
-    case_type = IGS
+    case_type = local
 
 
 # different setting for different case_type

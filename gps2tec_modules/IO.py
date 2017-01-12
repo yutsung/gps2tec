@@ -50,7 +50,7 @@ class Input_file:
         elif platform.system().lower() in "windows":
             self.crx2rnx_pwd = "bin/crx2rnx.exe"
 
-        if self.case_type == 'igs':
+        if self.case_type in 'igslocal':
             hh = 0
             mm = 0
             gim_days_before = 0

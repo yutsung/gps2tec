@@ -168,7 +168,7 @@ class NavigationData:
         self.hh    = int(hh)
         self.mm    = int(mm)
         self.types = download_type
-        if self.types=='igs':
+        if self.types in 'igslocal':
             target_time1 = datetime.datetime(self.year, 1, 1) + datetime.timedelta(days =self.doy-1)
             target_time2 = datetime.datetime(self.year, 1, 1) + datetime.timedelta(days =self.doy)
             self.dweeks1 = int((target_time1 - datetime.datetime(1980,1,6)).days/7)
@@ -189,7 +189,7 @@ class NavigationData:
     def file_exist(self):
         import os
         exist = True
-        if self.types=='igs':
+        if self.types in 'igslocal':
             if os.path.isfile(self.sourcefn_igs1[:-2]):
                 self.sourcefn1 = self.sourcefn_igs1[:-2]    
             elif os.path.isfile(self.sourcefn_igr1[:-2]):
@@ -216,7 +216,7 @@ class NavigationData:
             return
 
         print "Start to download Navigation data..."
-        if self.types=='igs':
+        if self.types in 'igslocal':
             weblink = "ftp://igscb.jpl.nasa.gov/pub/product/"
             if not (os.path.isfile(self.sourcefn_igs1) or os.path.isfile(self.sourcefn_igr1)):
                 try:
@@ -253,7 +253,7 @@ class NavigationData:
         x       = np.zeros(97)
         y       = np.zeros(97)
 
-        if self.types=='igs':
+        if self.types in 'igslocal':
             fid = open(self.sourcefn1,'r')
             rdline = fid.readline()
             while not rdline == "":
@@ -515,7 +515,7 @@ class GPSofileData:
         self.day    = int(target_time.day)
         self.hh     = hh
         self.mm     = mm
-        if ofile_type == 'igs':
+        if ofile_type in 'igslocal':
             self.ofile  = "{0}{2:03}0.{1}o".format(stn, str(year)[2:4], self.doy)
         elif ofile_type == 'igsrt':
             self.ofile  = '{0}{1:03}{2}{3:02}.{4:02}o'.format(stn, self.doy, chr(97+self.hh), self.mm, self.year%100)
