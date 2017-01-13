@@ -1,16 +1,14 @@
-# case_type  (local/IGS/IGSRT)
+# case type  (local/IGS/IGSRT)
     case_type = local
 
-
 # different setting for different case_type
-
     year      = 2015
     save_pwd  =
 
     # for IGS and local
         st_doy   =   74
         ed_doy   =   74
-        download_list_fn  = /Users/weihan/work/gps2tec/list
+        download_list_fn  = 
 
     # for IGSRT (realtime IGS)
         doy      =   10
@@ -19,14 +17,12 @@
         gim_days_before     = 10
         time_delay_minute   =  5
 
+# station bias method (GIM/FITTING)
+    stnbias_method       = GIM
 
-
-
-# stnbias_method (GIM/FITTING)
-    stnbias_method      = GIM
-
+# other settings
     elevation_angle      = 0
     h1_km                = 450
     h2_km                = 200
-
     multiprocess_numbers = 2
+
