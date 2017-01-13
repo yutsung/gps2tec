@@ -2,8 +2,6 @@
 
 This prohram is for calculate total electron content(TEC) from gps signal
 
-
-
 #Directory and file discription
 
 __bin/__  : some binary files (different version of crx2rnx)
@@ -36,9 +34,9 @@ __year__     :
      
 __save_pwd__ : 
 
-    Specifies the save directory and it will create directory by different days(e.g. /path_to_save/YYYY/DDD) in this directory.
+    Specifies the save directory and it will create directory by different days(e.g. /path_to_save/YYYY/DDD) in this 
     
-    If set empty,  it will create directory at current directory.
+    directory. If set empty, it will create directory at current directory.
 
 __st_doy__  : 
 
@@ -52,7 +50,7 @@ __download_list_fn__ :
 
     Specifies the GPS station list filename for downloading from IGS. The GPS station list file should have different 
     
-    station name in   different line, and have station name in first 4 char in each line. If set empty, it will 
+    station name in different line, and have station name in first 4 char in each line. If set empty, it will 
     
     download al GPS data from IGS. (for case_type IGS)
 
@@ -77,7 +75,7 @@ __time_delay_minute__ :
 
     This number should depend on [mm]. Because real-time GPS data is release at 15, 30, 45 minute each hour, 
     
-    so [Minute of run time] - [time_delay_minute] should be 15, 30 or 45.
+    so [Minute of run time] - [time_delay_minute] should be 15, 30 or 45. (for case_type IGSRT)
 
 __stnbias_method__ : Station bias method.
 
