@@ -4,7 +4,7 @@ This prohram is for calculate total electron content(TEC) from gps signal
 
 
 
-#Directory and file discription:
+#Directory and file discription
 
 __bin/__  : some binary files (different version of crx2rnx)
 
@@ -20,7 +20,7 @@ __marker.crd__  : gps station xyz coordinate list
 
 python gps2tec.py [input file]
 
-#Input file discription:
+#Input file discription
 
 __case_type__  : 
 
