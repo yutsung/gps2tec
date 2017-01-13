@@ -20,5 +20,7 @@ __marker.crd__  : gps station xyz coordinate list
 
 #Input file discription:
 __case_type__  : local  -- Calculate GPSTEC from o file in current directory
+
                  IGS    -- Download GPS source file from IGS(International GNSS Service) and calculate TEC
+                        
                  IGSRT  -- Download real-time GPS source file from IGS and calculate TEC
