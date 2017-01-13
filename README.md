@@ -74,9 +74,9 @@ __time_delay_minute__ :
 
 __stnbias_method__ : Station bias method.
 
-                     GIM      -- Calculate station bias by the value and the time of GIM minimum TEC.
+    GIM      -- Calculate station bias by the value and the time of GIM minimum TEC.
                      
-                     FITTING  -- Calculate station bias by fitting (M.Y. Chou and H.F. Tsai)
+    FITTING  -- Calculate station bias by fitting (M.Y. Chou and H.F. Tsai)
                      
 __elevation_angle__ : 
 
