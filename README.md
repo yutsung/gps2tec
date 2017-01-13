@@ -24,11 +24,11 @@ python gps2tec.py [input file]
 
 __case_type__  : 
 
-    local  -- Calculate GPSTEC from o file in current directory
+    local  -- Calculate GPSTEC from o file in current directory.
 
-    IGS    -- Download GPS source file from IGS(International GNSS Service) and calculate TEC
+    IGS    -- Download GPS source file from IGS(International GNSS Service) and calculate TEC.
                         
-    IGSRT  -- Download real-time GPS source file from IGS and calculate TEC
+    IGSRT  -- Download real-time GPS source file from IGS and calculate TEC.
             
 __year__     : 
 
@@ -37,6 +37,7 @@ __year__     :
 __save_pwd__ : 
 
     Specifies the save directory and it will create directory by different days(e.g. /path_to_save/YYYY/DDD) in this directory.
+    
     If set empty,  it will create directory at current directory.
 
 __st_doy__  : 
@@ -49,7 +50,11 @@ __ed_doy__  :
 
 __download_list_fn__ : 
 
-    Specifies the GPS station list filename for downloading from IGS. The GPS station list file should have different station name in   different line, and have station name in first 4 char in each line. If set empty, it will download al GPS data from IGS. (for case_type IGS)
+    Specifies the GPS station list filename for downloading from IGS. The GPS station list file should have different 
+    
+    station name in   different line, and have station name in first 4 char in each line. If set empty, it will 
+    
+    download al GPS data from IGS. (for case_type IGS)
 
 
 __doy__ : 
@@ -70,12 +75,14 @@ __gim_days_before__   :
 
 __time_delay_minute__ : 
 
-    This number should depend on [mm]. Because real-time GPS data is release at 15, 30, 45 minute each hour, so [Minute of run time] - [time_delay_minute] should be 15, 30 or 45.
+    This number should depend on [mm]. Because real-time GPS data is release at 15, 30, 45 minute each hour, 
+    
+    so [Minute of run time] - [time_delay_minute] should be 15, 30 or 45.
 
 __stnbias_method__ : Station bias method.
 
-    GIM      -- Calculate station bias by the value and the time of GIM minimum TEC.
-                     
+    GIM      -- Calculate station bias by the value and the time of GIM minimum TEC.  
+    
     FITTING  -- Calculate station bias by fitting (M.Y. Chou and H.F. Tsai)
                      
 __elevation_angle__ : 
