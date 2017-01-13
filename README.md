@@ -16,6 +16,7 @@ __gps2tec.inp__ :  input file
 
 __gps2tec.py__  : main program 
 
-__marker.crd__  : gps station xyz coordinate list 
+__marker.crd__  : gps station xyz coordinate list
 
 
+ 
