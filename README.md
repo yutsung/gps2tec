@@ -27,9 +27,11 @@ __case_type__  :
             
 __year__     : Year of run time.
 
-__save_pwd__ : Specifies the save directory and it will create directory by different days(e.g. /path_to_save/YYYY/DDD) in this directory.
+__save_pwd__ : 
 
-If set empty,  it will create directory at current directory.
+    Specifies the save directory and it will create directory by different days(e.g. /path_to_save/YYYY/DDD) in this directory.
+
+    If set empty,  it will create directory at current directory.
 
 __st_doy__  : Start DOY of run time. (for case_type IGS and local)
 
