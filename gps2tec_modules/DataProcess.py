@@ -109,7 +109,7 @@ def cal_PLcode(P1, P2, L1, L2, sat_bias, stn_bias, e, target_elve):
                 Lcode[i, j] = (c / f1 * L1[i, j] - c / f2 * L2[i, j]) * fat
         Pcode_sort = np.sort(Pcode[np.where(Pcode != 0)])
         if len(Pcode_sort) == 0: continue
-        Pcode_mid = Pcode_sort[np.ceil(len(Pcode_sort) / 2) - 1]
+        Pcode_mid = Pcode_sort[int(np.ceil(len(Pcode_sort) / 2) - 1)]
         for i in range(1, 2880):
             if (Pcode[i, j] != 0) and (abs(Pcode[i, j] - Pcode[i - 1, j]) > 500 or abs(Pcode[i, j] - Pcode_mid) > 500):
                 Pcode[i, j] = 0
