@@ -8,7 +8,7 @@
     # for IGS and local
         st_doy   =   74
         ed_doy   =   74
-        download_list_fn  = list
+        download_list_fn  = 
 
     # for IGSRT (realtime IGS)
         doy      =   10

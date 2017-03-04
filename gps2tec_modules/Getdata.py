@@ -515,6 +515,9 @@ class GPSofileData:
         self.day    = int(target_time.day)
         self.hh     = hh
         self.mm     = mm
+        self.stn_x  = 0
+        self.stn_y  = 0
+        self.stn_z  = 0
         if ofile_type in 'igslocal':
             self.ofile  = "{0}{2:03}0.{1}o".format(stn, str(year)[2:4], self.doy)
         elif ofile_type == 'igsrt':
@@ -524,11 +527,13 @@ class GPSofileData:
         fid = open(self.ofile, 'r')
         while True:
             rdline = fid.readline()
+            if not rdline: break
             if rdline[60:79] == "APPROX POSITION XYZ":    
                 self.stn_x = float(rdline[ 0:14])
                 self.stn_y = float(rdline[14:28])
                 self.stn_z = float(rdline[28:42])
                 break
+
         fid.close() 
         return self.stn_x, self.stn_y, self.stn_z
 
@@ -548,17 +553,14 @@ class GPSofileData:
         obs_dt = 0
         obs_num = 0
         obs_list = []
-        while not ofile_data[data_line][60:73] == "END OF HEADER":
+        while (not data_line >= len(ofile_data)) and (not ofile_data[data_line][60:73] == "END OF HEADER"):
             if ofile_data[data_line][60:68] == "INTERVAL":   # read GPS data time interval
                 obs_dt = float(ofile_data[data_line][0:6])
             if ofile_data[data_line][60:79] == "# / TYPES OF OBSERV": # read numbers of GPS observation and kind
                 if not obs_num: obs_num = int(ofile_data[data_line][4:6])
-                if obs_num < 4:
-                    return
-                else:
-                    obs_list.extend(ofile_data[data_line][10:60].split())
+                obs_list.extend(ofile_data[data_line][10:60].split())
             data_line += 1
-
+        if obs_num < 4: return
         each_obs_lines = ((obs_num-1)//5)+1
         data_line += 1
 
@@ -584,7 +586,11 @@ class GPSofileData:
                     else:
                         data_line += each_obs_lines * int(ofile_data[data_line][30:32]) + (int(ofile_data[data_line][30:32])-1)//12 + 1
                     continue
-                current_second = int(ofile_data[data_line][9:12]) * 3600 + int(ofile_data[data_line][12:15]) * 60 + int(ofile_data[data_line][15:18])
+                if ofile_data[data_line][15:18] == '   ':
+                    current_second = int(ofile_data[data_line][9:12]) * 3600 + int(ofile_data[data_line][12:15]) * 60
+                else:
+                    current_second = int(ofile_data[data_line][9:12]) * 3600 + int(ofile_data[data_line][12:15]) * 60 + int(ofile_data[data_line][15:18])
+
                 sate_num = int(ofile_data[data_line][30:32])
                 if current_second % dt == 0:
                     time_idx = current_second//dt
