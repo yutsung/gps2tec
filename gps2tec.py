@@ -28,7 +28,7 @@ def main():
     warnings.filterwarnings("ignore")
 
     input_para = IO.Input_file(sys.argv[1])
-    main_pwd = os.getcwd()
+    main_pwd = os.path.dirname(os.path.realpath(__file__))
 
     for run in range(input_para.total_run):
         # deal with time
@@ -191,4 +191,5 @@ def multi_gps2tec(stn_list, input_para, target_time, target_doy, satdata, gim, s
             target_doy, stn_num + 1, len(stn_list), target_stn, minTEC, GIMminTEC, stn_bias, ed_time - st_time)
 
 
-main()
+if __name__ == "__main__":
+    main()
